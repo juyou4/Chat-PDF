@@ -7,6 +7,8 @@
 [![Python 3.8+](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python)](https://www.python.org)
 [![React 18](https://img.shields.io/badge/React-18-61dafb?style=for-the-badge&logo=react)](https://reactjs.org)
 
+**中文** | **[English](README_EN.md)**
+
 功能完整的ChatPDF系统，集成向量检索、流式响应、AI视觉分析等所有高级功能。
 
 **一个版本，所有功能，一键启动！**
