@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../docker/Dockerfile.backend
+    container_name: chatpdf-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - BACKEND_HOST=0.0.0.0
+      - BACKEND_PORT=8000
+      - ENABLE_VECTOR_SEARCH=true
+      - ENABLE_STREAMING=true
+      - ENABLE_TABLE_EXTRACTION=true
+    volumes:
+      - ../backend:/app
+      - backend-data:/app/data
+    restart: unless-stopped
+    networks:
+      - chatpdf-network
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../docker/Dockerfile.frontend
+    container_name: chatpdf-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - chatpdf-network
+
+volumes:
+  backend-data:
+
+networks:
+  chatpdf-network:
+    driver: bridge
