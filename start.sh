@@ -27,6 +27,16 @@ if lsof -Pi :8000 -sTCP:LISTEN -t >/dev/null 2>&1 ; then
     sleep 1
 fi
 
+# 额外清理：杀掉所有可能的旧后端进程
+echo "清理旧的后端进程..."
+pkill -f "python.*backend/app.py" 2>/dev/null
+sleep 1
+
+# 清理 Python 缓存
+echo "清理 Python 缓存..."
+find backend -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
+find backend -name "*.pyc" -delete 2>/dev/null
+
 # 检查是否安装了 python3
 if ! command -v python3 &> /dev/null; then
     echo "❌ 未找到 python3，请先安装 Python 3"
