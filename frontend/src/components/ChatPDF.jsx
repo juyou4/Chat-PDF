@@ -13,6 +13,7 @@ const ChatPDF = () => {
   // Core State
   const [docId, setDocId] = useState(null);
   const [docInfo, setDocInfo] = useState(null);
+  const [pdfPanelWidth, setPdfPanelWidth] = useState(50); // Percentage
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -109,6 +110,10 @@ const ChatPDF = () => {
       const data = await response.json();
       setDocId(data.doc_id);
       setDocInfo(data);
+
+      // Load document content
+      await loadDocumentContent(data.doc_id);
+
       setMessages([{
         type: 'system',
         content: `✅ 文档《${data.filename}》上传成功！共 ${data.total_pages} 页。`
@@ -180,6 +185,16 @@ const ChatPDF = () => {
   };
 
   // Helper Functions
+  const loadDocumentContent = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/document/${id}`);
+      const data = await response.json();
+      setDocInfo(data);
+    } catch (error) {
+      console.error('Failed to load document:', error);
+    }
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -267,14 +282,15 @@ const ChatPDF = () => {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 flex overflow-hidden p-6 gap-6 pt-0">
+        <div className="flex-1 flex overflow-hidden p-6 gap-0 pt-0">
 
           {/* Left: PDF Preview (Floating Card) */}
           {docId ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`flex-1 glass-panel rounded-[32px] overflow-hidden flex flex-col relative shadow-xl ${darkMode ? 'bg-gray-800/50' : 'bg-white/70'}`}
+              className={`glass-panel rounded-[32px] overflow-hidden flex flex-col relative shadow-xl mr-6 ${darkMode ? 'bg-gray-800/50' : 'bg-white/70'}`}
+              style={{ width: `${pdfPanelWidth}%` }}
             >
               {/* PDF Toolbar */}
               <div className="h-14 border-b border-black/5 flex items-center justify-between px-6 bg-white/30 backdrop-blur-sm">
@@ -335,11 +351,40 @@ const ChatPDF = () => {
             </div>
           )}
 
+          {/* Resizable Divider */}
+          <div
+            className="w-2 cursor-col-resize hover:bg-blue-500/20 transition-colors flex-shrink-0 relative group"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              const startX = e.clientX;
+              const startWidth = pdfPanelWidth;
+
+              const handleMouseMove = (e) => {
+                const containerWidth = e.currentTarget?.parentElement?.offsetWidth || window.innerWidth;
+                const deltaX = e.clientX - startX;
+                const deltaPercent = (deltaX / containerWidth) * 100;
+                const newWidth = Math.max(30, Math.min(70, startWidth + deltaPercent));
+                setPdfPanelWidth(newWidth);
+              };
+
+              const handleMouseUp = () => {
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+              };
+
+              document.addEventListener('mousemove', handleMouseMove);
+              document.addEventListener('mouseup', handleMouseUp);
+            }}
+          >
+            <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-1 bg-gray-300 group-hover:bg-blue-500 transition-colors" />
+          </div>
+
           {/* Right: Chat Area (Floating Card) */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`w-[450px] glass-panel rounded-[32px] flex flex-col overflow-hidden shadow-xl ${darkMode ? 'bg-gray-800/50' : 'bg-white/70'}`}
+            className={`glass-panel rounded-[32px] flex flex-col overflow-hidden shadow-xl ${darkMode ? 'bg-gray-800/50' : 'bg-white/70'}`}
+            style={{ width: `${100 - pdfPanelWidth}%` }}
           >
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -351,8 +396,8 @@ const ChatPDF = () => {
                   className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm ${msg.type === 'user'
-                      ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-tr-none'
-                      : 'bg-white/80 backdrop-blur-sm text-gray-800 rounded-tl-none border border-white/50'
+                    ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-tr-none'
+                    : 'bg-white/80 backdrop-blur-sm text-gray-800 rounded-tl-none border border-white/50'
                     }`}>
                     {msg.hasImage && (
                       <div className="mb-2 rounded-lg overflow-hidden border border-white/20">
@@ -375,9 +420,9 @@ const ChatPDF = () => {
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-white/50 rounded-2xl p-4 flex gap-2 items-center">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" />
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-75" />
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-150" />
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                 </div>
               )}
