@@ -15,10 +15,7 @@ if %ERRORLEVEL% NEQ 0 (
 
 echo.
 echo 📦 正在更新后端依赖...
-cd backend
-call venv\Scripts\activate.bat
-pip install -r requirements.txt >nul 2>nul
-cd ..
+pip install -r backend/requirements.txt
 
 echo.
 echo 📦 正在更新前端依赖...

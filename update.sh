@@ -14,10 +14,8 @@ fi
 
 echo ""
 echo "📦 正在更新后端依赖..."
-cd backend
-source venv/bin/activate
-pip install -r requirements.txt > /dev/null 2>&1
-cd ..
+echo "📦 正在更新后端依赖..."
+pip3 install -r backend/requirements.txt
 
 echo ""
 echo "📦 正在更新前端依赖..."
