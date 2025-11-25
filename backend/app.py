@@ -691,6 +691,54 @@ async def generate_summary(request: SummaryRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"摘要生成失败: {str(e)}")
 
+# ==================== 文档上传和管理 ====================
+
+@app.post("/upload")
+async def upload_pdf(file: UploadFile = File(...)):
+    """上传PDF文件"""
+    if not file.filename.endswith('.pdf'):
+        raise HTTPException(status_code=400, detail="只支持PDF文件")
+    
+    try:
+        # 读取文件内容
+        content = await file.read()
+        pdf_file = io.BytesIO(content)
+        
+        # 提取文本
+        text, pages = extract_text_from_pdf(pdf_file)
+        
+        # 生成文档ID
+        doc_id = generate_doc_id(file.filename)
+        
+        # 存储文档
+        documents_store[doc_id] = {
+            "filename": file.filename,
+            "content": text,
+            "pages": pages,
+            "total_pages": len(pages),
+            "upload_time": datetime.now().isoformat(),
+            "doc_id": doc_id
+        }
+        
+        return {
+            "message": "文件上传成功",
+            "doc_id": doc_id,
+            "filename": file.filename,
+            "total_pages": len(pages),
+            "preview": text[:500] + "..." if len(text) > 500 else text
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"PDF处理失败: {str(e)}")
+
+@app.get("/document/{doc_id}")
+async def get_document(doc_id: str):
+    """获取文档详情"""
+    if doc_id not in documents_store:
+        raise HTTPException(status_code=404, detail="文档不存在")
+    
+    return documents_store[doc_id]
+
 @app.get("/models")
 async def get_models():
     """获取所有可用的AI模型配置"""
