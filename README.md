@@ -92,6 +92,49 @@ npm run dev
 
 ---
 
+## 🔄 自动更新
+
+ChatPDF 支持自动版本检测和一键升级！
+
+### 如何升级到最新版
+
+**Windows:**
+```bash
+update.bat
+```
+
+**Mac/Linux:**
+```bash
+chmod +x update.sh   # 首次需要
+./update.sh
+```
+
+**工作原理**：
+- 启动应用时自动检测 GitHub 最新版本
+- 发现新版本时顶部显示蓝色更新横幅
+- 点击"一键升级"提示运行更新脚本
+- 脚本自动执行 `git pull` + 依赖更新
+
+---
+
+## 📝 Mac 完整命令
+
+```bash
+# 首次设置（赋予执行权限）
+chmod +x start.sh update.sh stop.sh
+
+# 启动应用
+./start.sh
+
+# 升级版本
+./update.sh
+
+# 停止服务
+./stop.sh
+```
+
+---
+
 ## 🛠 技术栈
 
 ### 前端 (v2.0)

@@ -92,6 +92,49 @@ Supports all major AI providers:
 
 ---
 
+## 🔄 Auto-Update
+
+ChatPDF supports automatic version detection and one-click upgrades!
+
+### How to Upgrade
+
+**Windows:**
+```bash
+update.bat
+```
+
+**Mac/Linux:**
+```bash
+chmod +x update.sh   # First time only
+./update.sh
+```
+
+**How it works**:
+- Automatically checks GitHub for new versions on startup
+- Displays a blue update banner when a new version is available
+- Click "One-Click Upgrade" to run the update script
+- Script automatically executes `git pull` + dependency updates
+
+---
+
+## 📝 Mac Complete Commands
+
+```bash
+# First-time setup (grant permissions)
+chmod +x start.sh update.sh stop.sh
+
+# Start application
+./start.sh
+
+# Upgrade version
+./update.sh
+
+# Stop services
+./stop.sh
+```
+
+---
+
 ## 🛠 Tech Stack
 
 ### Frontend (v2.0)
