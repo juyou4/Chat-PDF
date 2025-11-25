@@ -318,6 +318,18 @@ const ChatPDF = () => {
     }
   };
 
+  const handleTextSelection = () => {
+    const selection = window.getSelection();
+    const text = selection.toString().trim();
+    if (text) {
+      setSelectedText(text);
+      setShowTextMenu(true);
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setMenuPosition({ x: rect.left, y: rect.top - 40 });
+    }
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
