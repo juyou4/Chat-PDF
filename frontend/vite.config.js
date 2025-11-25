@@ -1,22 +1,28 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
     plugins: [react()],
     server: {
         port: 3000,
         proxy: {
-            '/api': {
+            '/upload': {
                 target: 'http://localhost:8000',
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, '')
+                changeOrigin: true
             },
-            // Proxy for direct backend calls if frontend uses full URL sometimes
-            '/upload': 'http://localhost:8000',
-            '/chat': 'http://localhost:8000',
-            '/models': 'http://localhost:8000',
-            '/health': 'http://localhost:8000'
+            '/document': {
+                target: 'http://localhost:8000',
+                changeOrigin: true
+            },
+            '/models': {
+                target: 'http://localhost:8000',
+                changeOrigin: true
+            },
+            '/health': {
+                target: 'http://localhost:8000',
+                changeOrigin: true
+            }
         }
     },
     resolve: {
@@ -28,4 +34,4 @@ export default defineConfig({
         outDir: 'build',
         sourcemap: true
     }
-})
+});
