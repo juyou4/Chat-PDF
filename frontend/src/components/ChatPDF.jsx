@@ -48,6 +48,7 @@ const ChatPDF = () => {
   const [availableModels, setAvailableModels] = useState({});
   const [enableVectorSearch, setEnableVectorSearch] = useState(localStorage.getItem('enableVectorSearch') === 'true');
   const [enableScreenshot, setEnableScreenshot] = useState(localStorage.getItem('enableScreenshot') !== 'false');
+  const [streamSpeed, setStreamSpeed] = useState(localStorage.getItem('streamSpeed') || 'normal'); // fast, normal, slow, off
   const [streamingMessageId, setStreamingMessageId] = useState(null);
 
   // Refs
@@ -83,7 +84,8 @@ const ChatPDF = () => {
     localStorage.setItem('model', model);
     localStorage.setItem('enableVectorSearch', enableVectorSearch);
     localStorage.setItem('enableScreenshot', enableScreenshot);
-  }, [apiKey, apiProvider, model, enableVectorSearch, enableScreenshot]);
+    localStorage.setItem('streamSpeed', streamSpeed);
+  }, [apiKey, apiProvider, model, enableVectorSearch, enableScreenshot, streamSpeed]);
 
   // API Functions
   const fetchAvailableModels = async () => {
@@ -190,25 +192,46 @@ const ChatPDF = () => {
       const words = fullAnswer.split(' ');
       let currentText = '';
 
-      for (let i = 0; i < words.length; i++) {
-        currentText += (i > 0 ? ' ' : '') + words[i];
-        const delay = words[i].length * 15 + Math.random() * 30; // Variable speed based on word length
-        await new Promise(resolve => setTimeout(resolve, delay));
+      // Speed configuration
+      const speedConfig = {
+        fast: { baseDelay: 10, variation: 10 },
+        normal: { baseDelay: 20, variation: 20 },
+        slow: { baseDelay: 40, variation: 30 },
+        off: { baseDelay: 0, variation: 0 }
+      };
 
+      const { baseDelay, variation } = speedConfig[streamSpeed] || speedConfig.normal;
+
+      // If streaming is off, show entire message immediately
+      if (streamSpeed === 'off') {
         setMessages(prev => prev.map(msg =>
           msg.id === tempMsgId
-            ? { ...msg, content: currentText }
+            ? { ...msg, content: fullAnswer, isStreaming: false }
             : msg
         ));
-      }
+        setStreamingMessageId(null);
+      } else {
+        // Stream word by word with configured speed
+        for (let i = 0; i < words.length; i++) {
+          currentText += (i > 0 ? ' ' : '') + words[i];
+          const delay = baseDelay + Math.random() * variation;
+          await new Promise(resolve => setTimeout(resolve, delay));
 
-      // Mark streaming complete
-      setMessages(prev => prev.map(msg =>
-        msg.id === tempMsgId
-          ? { ...msg, isStreaming: false }
-          : msg
-      ));
-      setStreamingMessageId(null);
+          setMessages(prev => prev.map(msg =>
+            msg.id === tempMsgId
+              ? { ...msg, content: currentText }
+              : msg
+          ));
+        }
+
+        // Mark streaming complete
+        setMessages(prev => prev.map(msg =>
+          msg.id === tempMsgId
+            ? { ...msg, isStreaming: false }
+            : msg
+        ));
+        setStreamingMessageId(null);
+      }
 
       setScreenshot(null); // Clear screenshot after sending
     } catch (error) {
@@ -639,6 +662,21 @@ const ChatPDF = () => {
                     <span className="font-medium">Screenshot Analysis</span>
                     <input type="checkbox" checked={enableScreenshot} onChange={e => setEnableScreenshot(e.target.checked)} className="accent-blue-600 w-5 h-5" />
                   </label>
+
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">流式输出速度</label>
+                    <select
+                      value={streamSpeed}
+                      onChange={(e) => setStreamSpeed(e.target.value)}
+                      className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
+                    >
+                      <option value="fast">快速 ⚡</option>
+                      <option value="normal">正常 ✨</option>
+                      <option value="slow">慢速 🐢</option>
+                      <option value="off">关闭流式（直接显示）</option>
+                    </select>
+                    <p className="text-xs text-gray-500 mt-1">调整AI回复的打字机效果速度</p>
+                  </div>
                 </div>
               </div>
 
