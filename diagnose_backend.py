@@ -7,15 +7,43 @@ BASE_URL = "http://127.0.0.1:8000"
 TEST_PDF_PATH = "sample.pdf"
 
 def create_dummy_pdf():
-    """创建一个简单的 PDF 文件用于测试"""
-    from reportlab.pdfgen import canvas
-    c = canvas.Canvas(TEST_PDF_PATH)
-    c.drawString(100, 750, "Hello World")
-    c.save()
-    print(f"✅ Created dummy PDF: {TEST_PDF_PATH}")
+    """创建一个有效的最小 PDF 文件"""
+    # 这是一个有效的最小 PDF 文件结构
+    minimal_pdf = (
+        b"%PDF-1.4\n"
+        b"1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n"
+        b"2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n"
+        b"3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << >> >>\nendobj\n"
+        b"xref\n0 4\n0000000000 65535 f \n0000000010 00000 n \n0000000060 00000 n \n0000000117 00000 n \n"
+        b"trailer\n<< /Size 4 /Root 1 0 R >>\nstartxref\n223\n%%EOF\n"
+    )
+    with open(TEST_PDF_PATH, "wb") as f:
+        f.write(minimal_pdf)
+    print(f"✅ Created valid minimal PDF: {TEST_PDF_PATH}")
+
+def check_backend_version():
+    """检查后端版本"""
+    try:
+        response = requests.get(f"{BASE_URL}/version")
+        if response.status_code == 200:
+            data = response.json()
+            print(f"ℹ️  Backend Version: {data.get('version')} (Build: {data.get('build_time')})")
+            if data.get("feature") == "native_pdf_url":
+                print("✅ Backend has 'native_pdf_url' feature")
+                return True
+            else:
+                print("❌ Backend is running OLD code (missing feature flag)")
+                return False
+        else:
+            print("⚠️  /version endpoint not found (Backend is likely old)")
+            return False
+    except Exception:
+        print("⚠️  Could not check version")
+        return False
 
 def check_backend_health():
     """检查后端健康状态"""
+    check_backend_version() # 先检查版本
     try:
         response = requests.get(f"{BASE_URL}/health")
         if response.status_code == 200:

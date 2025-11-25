@@ -818,12 +818,12 @@ async def get_models():
 @app.get("/health")
 async def health_check():
     """健康检查"""
-    return {
-        "status": "ok",
-        "message": "ChatPDF Pro with Vision API is running",
-        "supported_providers": list(AI_MODELS.keys()),
-        "vision_providers": list(VISION_MODELS.keys())
-    }
+    return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+
+@app.get("/version")
+async def get_version():
+    """检查后端代码版本"""
+    return {"version": "2.0.1", "build_time": "2025-11-25 19:30:00", "feature": "native_pdf_url"}
 
 if __name__ == "__main__":
     import uvicorn
