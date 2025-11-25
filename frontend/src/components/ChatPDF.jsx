@@ -8,6 +8,7 @@ import rehypeKatex from 'rehype-katex';
 import rehypeHighlight from 'rehype-highlight';
 import 'katex/dist/katex.min.css';
 import 'highlight.js/styles/github.css';
+import PDFViewer from './PDFViewer';
 
 // API base URL – empty string so that Vite proxy forwards to backend
 const API_BASE_URL = '';
@@ -446,24 +447,29 @@ const ChatPDF = () => {
               </div>
 
               {/* PDF Content */}
-              <div ref={pdfContainerRef} className="flex-1 overflow-auto p-8 flex justify-center bg-gray-50/50">
-                <div
-                  className="bg-white shadow-lg transition-transform duration-200 origin-top"
-                  style={{
-                    width: '100%',
-                    maxWidth: '800px',
-                    minHeight: '1000px',
-                    transform: `scale(${pdfScale})`
-                  }}
-                >
-                  {docInfo?.pages?.[currentPage - 1] ? (
-                    <div className="p-12 whitespace-pre-wrap text-gray-800 leading-relaxed font-serif text-lg">
-                      {docInfo.pages[currentPage - 1].content}
+              <div className="flex-1 overflow-hidden">
+                {docInfo?.pdf_url ? (
+                  <PDFViewer
+                    pdfUrl={docInfo.pdf_url}
+                    onTextSelect={(text) => setSelectedText(text)}
+                  />
+                ) : docInfo?.pages ? (
+                  <div ref={pdfContainerRef} className="h-full overflow-auto p-8 flex justify-center bg-gray-50/50">
+                    <div
+                      className="bg-white shadow-2xl p-12 rounded-lg max-w-4xl"
+                      style={{ transform: `scale(${pdfScale})`, transformOrigin: 'top center' }}
+                      onMouseUp={handleTextSelection}
+                    >
+                      <pre className="whitespace-pre-wrap font-serif text-gray-800 leading-relaxed">
+                        {docInfo.pages[currentPage - 1]?.content || 'No content'}
+                      </pre>
                     </div>
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-gray-400">Loading page...</div>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-400">
+                    <p>Loading PDF...</p>
+                  </div>
+                )}
               </div>
             </motion.div>
           ) : (
@@ -598,10 +604,10 @@ const ChatPDF = () => {
             </div>
           </motion.div>
         </div>
-      </div>
+      </div >
 
       {/* Settings Modal */}
-      <AnimatePresence>
+      < AnimatePresence >
         {showSettings && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
             <motion.div
@@ -689,8 +695,8 @@ const ChatPDF = () => {
             </motion.div>
           </div>
         )}
-      </AnimatePresence>
-    </div>
+      </AnimatePresence >
+    </div >
   );
 };
 
