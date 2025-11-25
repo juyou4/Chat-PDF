@@ -125,6 +125,15 @@ const ChatPDF = () => {
       const docResponse = await fetch(`${API_BASE_URL}/document/${data.doc_id}`);
       const fullDocData = await docResponse.json();
       console.log('🟢 Document data received:', fullDocData);
+
+      // Debug alert to check PDF URL
+      if (fullDocData.pdf_url) {
+        console.log('✅ PDF URL found:', fullDocData.pdf_url);
+      } else {
+        console.warn('⚠️ No PDF URL found in document data');
+        alert('调试信息: 后端未返回 PDF URL。请确认后端服务已重启 (python backend/app.py)');
+      }
+
       console.log('🟢 Pages structure:', fullDocData.pages);
       console.log('🟢 Total pages:', fullDocData.total_pages);
       setDocInfo(fullDocData);
