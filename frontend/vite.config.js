@@ -8,20 +8,34 @@ export default defineConfig({
         port: 3000,
         proxy: {
             '/upload': {
-                target: 'http://localhost:8000',
-                changeOrigin: true
+                target: 'http://127.0.0.1:8000',
+                changeOrigin: true,
+                secure: false
             },
             '/document': {
-                target: 'http://localhost:8000',
-                changeOrigin: true
+                target: 'http://127.0.0.1:8000',
+                changeOrigin: true,
+                secure: false
             },
             '/models': {
-                target: 'http://localhost:8000',
-                changeOrigin: true
+                target: 'http://127.0.0.1:8000',
+                changeOrigin: true,
+                secure: false
             },
             '/health': {
-                target: 'http://localhost:8000',
-                changeOrigin: true
+                target: 'http://127.0.0.1:8000',
+                changeOrigin: true,
+                secure: false
+            },
+            '/chat': {
+                target: 'http://127.0.0.1:8000',
+                changeOrigin: true,
+                secure: false
+            },
+            '/summary': {
+                target: 'http://127.0.0.1:8000',
+                changeOrigin: true,
+                secure: false
             }
         }
     },
