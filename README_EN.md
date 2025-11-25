@@ -1,368 +1,117 @@
-# ChatPDF - AI-Powered Intelligent PDF Document Chat System
+# ChatPDF 2.0 - Healing AI Document Assistant
 
 <div align="center">
 
-![ChatPDF Logo](https://img.shields.io/badge/ChatPDF-AI%20Document%20Chat-blue?style=for-the-badge)
+![ChatPDF Logo](https://img.shields.io/badge/ChatPDF-2.0-blue?style=for-the-badge)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-[![Python 3.8+](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python)](https://www.python.org)
-[![React 18](https://img.shields.io/badge/React-18-61dafb?style=for-the-badge&logo=react)](https://reactjs.org)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react)](https://reactjs.org)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)](https://www.python.org)
 
 **[中文](README.md)** | **English**
 
-A fully-featured ChatPDF system with vector search, streaming responses, AI vision analysis, and all advanced features integrated.
+**The All-New ChatPDF 2.0**: Healing Blue UI, Blazing Fast Vite, and Free Local Model Support!
 
-**One Version, All Features, One-Click Deploy!**
-
-[Quick Start](#quick-start) • [Features](#features) • [Tech Stack](#tech-stack) • [Documentation](#documentation)
+[Quick Start](#quick-start) • [New Features](#-new-features) • [Tech Stack](#-tech-stack) • [Docs](#-docs)
 
 </div>
 
 ---
 
-## ✨ Features
+## ✨ New Features (v2.0)
 
-### 🎯 All Features, Ready to Use
+### 🎨 Healing Blue UI
+- **Visual Excellence**: Featuring a calming `#F6F8FA` → `#E9F4FF` gradient background with high-saturation blue accents.
+- **Floating Glass Cards**: Content floats in beautiful glassmorphism cards with smooth animations.
+- **Modern Aesthetics**: Deeply optimized UI for a refreshing, tech-savvy feel.
+- **Dark Mode**: Toggle between Light and Dark themes for comfortable reading at night.
 
-- ✅ **PDF Upload & Parsing** - Support any PDF file upload with high-precision text extraction (pdfplumber)
-- ✅ **AI Intelligent Chat** - Interactive Q&A based on document content
-- ✅ **Auto Summary Generation** - Intelligently extract key document points
-- ✅ **Question Suggestions** - Auto-generate related questions for deeper understanding
-- ✅ **Multi-AI Model Support** - Support 10+ models (OpenAI GPT, Anthropic Claude, Gemini, etc.)
-- ✅ **Responsive Design** - Beautiful modern UI interface
+### ⚡ Blazing Performance
+- **Powered by Vite 6.0**: 10x faster startup and millisecond-level HMR.
+- **React 18.3**: Leveraging the latest concurrent features for silky smooth interactions.
 
-### 🚀 Advanced Features
-
-- 🚀 **Vector Search System** - Semantic search based on FAISS + LangChain
-- 🚀 **Streaming Responses** - Real-time typewriter effect for better UX
-- 🚀 **Table Extraction** - Precise table data extraction
-- 🚀 **Smart Chunking** - Auto document chunking for better long document handling
-- 🚀 **Local Embedding** - Support free local embedding models
+### 🦙 Local Model Support (Free!)
+- **Ollama Integration**: Native support for **Llama 3**, **Mistral**, **Qwen**, and more.
+- **Privacy First**: Run AI locally on your machine. Your data never leaves your device.
 
 ### 📸 AI Vision Analysis
+- **Smart Screenshot**: Capture full pages or select specific areas.
+- **Multimodal Analysis**: Support for GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro.
+- **Chart Understanding**: Accurately recognize charts, formulas, and table data.
 
-- 📸 **Full-Page Screenshot** - One-click capture PDF page for AI analysis
-- 📸 **Area Screenshot** - Select specific areas for precise capture
-- 📸 **AI Vision Analysis** - Support GPT-4V, Claude Vision, Gemini Vision
-- 📸 **Chart Recognition** - Understand charts, tables, formulas, flowcharts
-- 📸 **Real-time Preview** - Instant screenshot preview with option to clear and retake
-
-## 🎯 Core Features Overview
-
-ChatPDF includes all advanced features, ready out of the box!
-
-| Category | Feature | Description |
-|----------|---------|-------------|
-| **PDF Processing** | Text Extraction | pdfplumber high-precision extraction |
-| | Table Extraction | Auto identify and extract tables |
-| **AI Chat** | Multi-Model Support | 10+ AI models (OpenAI/Claude/Gemini, etc.) |
-| | Streaming Response | Real-time typewriter effect |
-| | Vector Search | FAISS semantic search, 60-80% token savings |
-| **Vision Analysis📸** | Full-Page Screenshot | One-click PDF page capture |
-| | Area Screenshot | Precise area selection |
-| | AI Vision | GPT-4V/Claude Vision/Gemini Vision support |
-| | Chart Recognition | Understand charts, tables, formulas, flowcharts |
-
-## 📁 Project Structure
-
-```
-ChatPDF/
-├── backend/                    # Backend service
-│   ├── app.py                      # Main app (all features)
-│   └── requirements.txt            # All dependencies
-├── frontend/                   # Frontend app
-│   ├── src/
-│   │   ├── components/
-│   │   │   └── ChatPDF.jsx         # Main component (all features)
-│   │   ├── App.js
-│   │   ├── index.js
-│   │   └── index.css
-│   ├── public/
-│   │   └── index.html
-│   ├── package.json
-│   ├── tailwind.config.js
-│   └── postcss.config.js
-├── docs/                       # Documentation
-│   ├── QUICK_START.md
-│   ├── USAGE_GUIDE.md
-│   ├── SCREENSHOT_GUIDE.md
-│   └── API_CONFIG_GUIDE.md
-├── docker/                     # Docker config
-│   ├── Dockerfile.backend
-│   ├── Dockerfile.frontend
-│   └── docker-compose.yml
-├── scripts/                    # Helper scripts
-│   ├── start_backend.sh
-│   └── start_backend.bat
-├── start.bat                   # 🚀 Windows one-click start
-├── start.sh                    # 🚀 Linux/Mac one-click start
-├── stop.sh                     # Stop services
-├── .gitignore
-├── .env.example
-├── LICENSE
-└── README.md
-```
+---
 
 ## 🚀 Quick Start
 
-### Method 1: One-Click Start (Easiest, Recommended⭐)
-
-After cloning, one command to start and **get all features**!
+### Option 1: One-Click Start (Recommended)
 
 **Windows:**
 ```bash
-git clone https://github.com/juyou4/Chat-PDF.git
-cd Chat-PDF
 start.bat
 ```
 
 **Linux/Mac:**
 ```bash
-git clone https://github.com/juyou4/Chat-PDF.git
-cd Chat-PDF
 chmod +x start.sh
 ./start.sh
 ```
 
-**That's it!** The script will **automatically**:
-- ✅ Create virtual environment
-- ✅ Install all dependencies (including screenshot features)
-- ✅ Configure frontend components
-- ✅ Start full-featured backend
-- ✅ Start frontend service
-- ✅ Open browser
+### Option 2: Manual Start
 
-**You'll get all features:**
-- PDF text chat
-- Vector search (FAISS)
-- Streaming responses
-- Table extraction
-- 📸 Full-page screenshot
-- 📸 Area screenshot
-- 📸 AI vision analysis
-
-**No version selection, no manual configuration!**
-
-### Method 2: Docker One-Click Deploy
-
-If you have Docker installed:
-
-```bash
-git clone https://github.com/juyou4/Chat-PDF.git
-cd Chat-PDF/docker
-docker-compose up --build
-```
-
-Services will auto-start:
-- Backend: `http://localhost:8000`
-- Frontend: `http://localhost:3000`
-
-### Method 3: Manual Deployment
-
-**1. Backend Deployment**
-
+**1. Start Backend**
 ```bash
 cd backend
-
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# Windows: venv\Scripts\activate
-# Linux/Mac: source venv/bin/activate
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Start service
 python app.py
 ```
+*Backend runs at: http://localhost:8000*
 
-Backend API will run at `http://localhost:8000`  
-API Docs: `http://localhost:8000/docs`
-
-**2. Frontend Deployment**
-
+**2. Start Frontend**
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start dev server
-npm start
+npm run dev
 ```
-
-Frontend will run at `http://localhost:3000`
-
-
-## 🔧 Configure API Key
-
-### Supported AI Models
-
-| Provider | Model Examples | Get API Key |
-|----------|----------------|-------------|
-| OpenAI | gpt-3.5-turbo, gpt-4 | [platform.openai.com](https://platform.openai.com/api-keys) |
-| Anthropic | claude-3-sonnet-20240229 | [console.anthropic.com](https://console.anthropic.com/) |
-| DeepSeek | deepseek-chat | [platform.deepseek.com](https://platform.deepseek.com/) |
-
-### Configure in UI
-
-1. Click settings icon⚙️ in top right
-2. Select API provider
-3. Enter model name
-4. Paste your API Key
-5. Configuration auto-saves to browser local storage
-
-### 🎛️ Feature Toggles
-
-Control features via settings panel switches:
-
-- **🔍 Vector Search** - FAISS semantic search, save 60-80% tokens
-- **⚡ Streaming Response** - Real-time typewriter effect
-- **📸 Screenshot Analysis** - Enable PDF screenshot and AI vision features
-
-All settings save automatically - no code editing required!
-
-## 📖 Usage Guide
-
-### Basic Usage
-
-1. **Upload PDF** - Click "Choose PDF File" button, select document
-2. **View Summary** - Auto-generate summary and suggested questions after upload
-3. **Start Chatting** - Enter question in input box, AI answers based on document
-
-### Screenshot Features
-
-**Full-Page Screenshot:**
-1. Navigate to desired page
-2. Click "📷 Full Page" button in toolbar
-3. Ask AI questions about the screenshot
-
-**Area Screenshot:**
-1. Click "✂️ Area" button in toolbar
-2. Drag mouse to select area
-3. Release to complete screenshot
-4. Ask questions in chat
-
-More details: [Screenshot Guide](docs/SCREENSHOT_GUIDE.md)
-
-## 🛠 Tech Stack
-
-### Backend
-- **Python 3.8+**
-- **FastAPI** - High-performance web framework
-- **pdfplumber** - PDF text extraction
-- **LangChain** - LLM application framework
-- **FAISS** - Vector similarity search
-- **sentence-transformers** - Local embedding models
-- **httpx** - Async HTTP client
-
-### Frontend
-- **React 18** - UI framework
-- **Tailwind CSS** - Modern styling
-- **Lucide React** - Icon library
-- **html2canvas** - Screenshot functionality
-
-### AI Support
-- OpenAI (GPT-3.5, GPT-4, GPT-4V)
-- Anthropic (Claude, Claude Vision)
-- Google (Gemini, Gemini Vision)
-- DeepSeek, xAI Grok
-- 10+ models total
-
-## 🐳 Production Deployment
-
-### Docker Deployment
-
-```bash
-# Build and start
-cd docker
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-```
-
-### Environment Variables
-
-Copy `.env.example` to `.env` and configure:
-
-```env
-# Backend config
-BACKEND_HOST=0.0.0.0
-BACKEND_PORT=8000
-
-# Feature flags
-ENABLE_VECTOR_SEARCH=true
-ENABLE_STREAMING=true
-ENABLE_TABLE_EXTRACTION=true
-```
-
-## 📊 Performance Metrics
-
-### Vector Search Performance
-- **Accuracy Improvement**: 30-50% (up to 70% for long docs)
-- **Token Savings**: 60-80%
-- **Search Speed**: <100ms
-
-### Streaming Response
-- **First Token Latency**: 500-1000ms
-- **Generation Speed**: 20-50 chars/sec
-
-## 📚 Documentation
-
-- [Quick Start Guide](docs/QUICK_START.md)
-- [Detailed Usage Guide](docs/USAGE_GUIDE.md)
-- [API Configuration Guide](docs/API_CONFIG_GUIDE.md)
-- [📸 Screenshot Features Guide](docs/SCREENSHOT_GUIDE.md)
-- [Deployment Checklist](docs/DEPLOYMENT_CHECKLIST.md)
-
-## 🤝 Contributing
-
-Issues and Pull Requests welcome!
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE)
-
-## ⚠️ Security Tips
-
-1. **Never hardcode API Keys in code**
-2. **Use HTTPS in production**
-3. **Add request rate limiting**
-4. **Use backend proxy for API Keys**
-5. **Regularly update dependencies**
-
-## 💡 FAQ
-
-**Q: What's the maximum PDF file size?**  
-A: Vector search can handle documents of any size with smart chunking.
-
-**Q: Why do I need my own API Key?**  
-A: To avoid API costs and use your own quota. Production deployments should use backend proxy.
-
-**Q: Can it handle scanned PDFs?**  
-A: Current version doesn鈥檛 support OCR. Need to integrate OCR (e.g., Tesseract).
-
-**Q: How to improve answer accuracy?**  
-A: Enable vector search for significant accuracy boost, or use more powerful models (GPT-4).
-
-**Q: How to use screenshot features?**  
-A: Click "📷 Full Page" or "✂️ Area" buttons in toolbar to screenshot, then ask AI. Must select vision-capable models (marked with 📸).
-
-## 🌟 Star History
-
-If this project helps you, give it a ⭐️!
+*Frontend runs at: http://localhost:3000*
 
 ---
 
+## 🔧 Model Configuration
+
+### 1. Online Models (API Key)
+Supports all major AI providers:
+- **OpenAI**: GPT-4o, GPT-4 Turbo
+- **Anthropic**: Claude 3.5 Sonnet, Claude 3 Opus
+- **Google**: Gemini 1.5 Pro
+- **DeepSeek**: DeepSeek Chat
+
+### 2. Local Models (Ollama)
+1. Download and install [Ollama](https://ollama.com/)
+2. Pull a model: `ollama pull llama3`
+3. Select **Provider: Local (Ollama)** in ChatPDF Settings.
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend (v2.0)
+- **Build Tool**: Vite 6.0
+- **Framework**: React 18.3
+- **Styling**: Tailwind CSS 3.4 + Framer Motion (Animations)
+- **Rendering**: React Markdown + KaTeX (Math) + Highlight.js (Code)
+
+### Backend
+- **Framework**: FastAPI 0.115+
+- **AI Orchestration**: LangChain 0.3
+- **PDF Processing**: PyPDF2 + pdfplumber
+- **Vector Search**: FAISS + Sentence Transformers
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
 <div align="center">
-
-**Enjoy!** 🎉
-
 Made with ❤️ by ChatPDF Team
-
 </div>

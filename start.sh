@@ -86,25 +86,8 @@ if ! npm list html2canvas > /dev/null 2>&1; then
 fi
 
 # 配置使用完整版组件
-echo "配置前端..."
-cat > src/App.js << 'EOF'
-import React from 'react';
-import ChatPDF from './components/ChatPDF';
-import './index.css';
-
-function App() {
-  return (
-    <div className="App">
-      <ChatPDF />
-    </div>
-  );
-}
-
-export default App;
-EOF
-
 echo -e "${GREEN}✨ 启动前端...${NC}"
-nohup npm start > ../frontend.log 2>&1 &
+nohup npm run dev > ../frontend.log 2>&1 &
 FRONTEND_PID=$!
 echo $FRONTEND_PID > ../frontend.pid
 

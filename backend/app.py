@@ -114,6 +114,16 @@ AI_MODELS = {
             "deepseek-chat": "DeepSeek Chat",
             "deepseek-v3.2-exp": "DeepSeek V3.2"
         }
+    },
+    "ollama": {
+        "name": "Local (Ollama)",
+        "endpoint": "http://localhost:11434/api/chat",
+        "models": {
+            "llama3": "Llama 3 (Local)",
+            "mistral": "Mistral (Local)",
+            "qwen2": "Qwen 2 (Local)",
+            "llava": "LLaVA (Local Vision)"
+        }
     }
 }
 
@@ -301,6 +311,42 @@ async def call_grok_api(messages: List[dict], api_key: str, model: str):
         
         return response.json()
 
+async def call_ollama_api(messages: List[dict], model: str):
+    """调用本地Ollama API"""
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        # Ollama API format
+        payload = {
+            "model": model,
+            "messages": messages,
+            "stream": False
+        }
+        
+        try:
+            response = await client.post(
+                "http://localhost:11434/api/chat",
+                json=payload
+            )
+            
+            if response.status_code != 200:
+                raise HTTPException(
+                    status_code=response.status_code,
+                    detail=f"Ollama API错误: {response.text}"
+                )
+                
+            result = response.json()
+            return {
+                "choices": [{
+                    "message": {
+                        "content": result["message"]["content"]
+                    }
+                }]
+            }
+        except httpx.ConnectError:
+            raise HTTPException(
+                status_code=503,
+                detail="无法连接到本地Ollama服务，请确保Ollama已启动 (localhost:11434)"
+            )
+
 async def call_ai_api(messages: List[dict], api_key: str, model: str, provider: str):
     """统一的AI API调用接口"""
     if provider == "openai":
@@ -311,6 +357,8 @@ async def call_ai_api(messages: List[dict], api_key: str, model: str, provider: 
         return await call_gemini_api(messages, api_key, model)
     elif provider == "grok":
         return await call_grok_api(messages, api_key, model)
+    elif provider == "ollama":
+        return await call_ollama_api(messages, model)
     else:
         # 其他提供商使用OpenAI兼容格式
         endpoint = AI_MODELS.get(provider, {}).get("endpoint", "")

@@ -47,7 +47,7 @@ if not exist "venv" (
 call venv\Scripts\activate.bat
 
 echo 📥 安装/更新依赖...
-pip install -r requirements.txt >nul 2>nul
+pip install -r requirements.txt
 
 echo ✨ 启动后端...
 start "ChatPDF Backend" cmd /k "venv\Scripts\activate.bat && python app.py"
@@ -74,25 +74,8 @@ if errorlevel 1 (
     npm install html2canvas
 )
 
-echo 配置前端...
-(
-echo import React from 'react';
-echo import ChatPDF from './components/ChatPDF';
-echo import './index.css';
-echo.
-echo function App^(^) {
-echo   return ^(
-echo     ^<div className="App"^>
-echo       ^<ChatPDF /^>
-echo     ^</div^>
-echo   ^);
-echo }
-echo.
-echo export default App;
-) > src\App.js
-
 echo ✨ 启动前端...
-start "ChatPDF Frontend" cmd /k "npm start"
+start "ChatPDF Frontend" cmd /k "npm run dev"
 
 cd ..
 
