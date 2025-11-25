@@ -108,6 +108,7 @@ const ChatPDF = () => {
     formData.append('file', file);
 
     try {
+      console.log('🔵 Uploading file:', file.name);
       const response = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
         body: formData,
@@ -116,11 +117,16 @@ const ChatPDF = () => {
       if (!response.ok) throw new Error('Upload failed');
 
       const data = await response.json();
+      console.log('🟢 Upload response:', data);
       setDocId(data.doc_id);
 
       // Load full document content with pages
+      console.log('🔵 Fetching document details for:', data.doc_id);
       const docResponse = await fetch(`${API_BASE_URL}/document/${data.doc_id}`);
       const fullDocData = await docResponse.json();
+      console.log('🟢 Document data received:', fullDocData);
+      console.log('🟢 Pages structure:', fullDocData.pages);
+      console.log('🟢 Total pages:', fullDocData.total_pages);
       setDocInfo(fullDocData);
 
       setMessages([{
@@ -132,6 +138,7 @@ const ChatPDF = () => {
       setHistory(prev => [{ id: data.doc_id, title: data.filename, date: new Date().toLocaleDateString() }, ...prev]);
 
     } catch (error) {
+      console.error('❌ Upload error:', error);
       alert('上传失败: ' + error.message);
     } finally {
       setIsUploading(false);
