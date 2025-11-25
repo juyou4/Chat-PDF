@@ -13,6 +13,14 @@ if %errorlevel% neq 0 (
     exit /b
 )
 
+echo [0/4] 检查更新...
+git pull origin main
+if %errorlevel% equ 0 (
+    echo ✅ 代码已更新
+) else (
+    echo ⚠️ 更新检查跳过 (可能是网络问题或已是最新)
+)
+
 echo [1/4] 检查并安装后端依赖...
 pip install -r backend/requirements.txt
 if %errorlevel% neq 0 (

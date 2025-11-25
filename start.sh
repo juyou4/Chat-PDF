@@ -7,6 +7,15 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}🚀 正在启动 ChatPDF Pro...${NC}"
 
+# ==================== 自动更新 ====================
+echo -e "${BLUE}🔄 检查更新...${NC}"
+git pull origin main
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✅ 代码已更新到最新版本${NC}"
+else
+    echo -e "${BLUE}⚠️ 更新失败或已是最新 (可忽略)${NC}"
+fi
+
 # ==================== 后端检查与启动 ====================
 echo -e "${BLUE}📦 检查后端依赖...${NC}"
 
