@@ -24,6 +24,7 @@ const ChatPDF = () => {
   const [showSidebar, setShowSidebar] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
   const [history, setHistory] = useState([]); // Mock history for now
+  const [updateAvailable, setUpdateAvailable] = useState(null); // {version, changelog}
 
   // PDF State
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,6 +45,7 @@ const ChatPDF = () => {
   const [availableModels, setAvailableModels] = useState({});
   const [enableVectorSearch, setEnableVectorSearch] = useState(localStorage.getItem('enableVectorSearch') === 'true');
   const [enableScreenshot, setEnableScreenshot] = useState(localStorage.getItem('enableScreenshot') !== 'false');
+  const [streamingMessageId, setStreamingMessageId] = useState(null);
 
   // Refs
   const fileInputRef = useRef(null);
@@ -65,7 +67,7 @@ const ChatPDF = () => {
   // Effects
   useEffect(() => {
     fetchAvailableModels();
-    // Load history from local storage if implemented
+    checkForUpdates(); // Check for updates on startup
   }, []);
 
   useEffect(() => {
@@ -167,11 +169,41 @@ const ChatPDF = () => {
       if (!response.ok) throw new Error('Failed to get response');
 
       const data = await response.json();
+      const fullAnswer = data.answer;
+
+      // Add placeholder message for streaming effect
+      const tempMsgId = Date.now();
+      setStreamingMessageId(tempMsgId);
       setMessages(prev => [...prev, {
+        id: tempMsgId,
         type: 'assistant',
-        content: data.answer,
-        model: model
+        content: '',
+        model: model,
+        isStreaming: true
       }]);
+
+      // Simulate streaming with typewriter effect
+      const words = fullAnswer.split('');
+      let currentText = '';
+
+      for (let i = 0; i < words.length; i++) {
+        currentText += words[i];
+        await new Promise(resolve => setTimeout(resolve, 10)); // 10ms per character
+
+        setMessages(prev => prev.map(msg =>
+          msg.id === tempMsgId
+            ? { ...msg, content: currentText }
+            : msg
+        ));
+      }
+
+      // Mark streaming complete
+      setMessages(prev => prev.map(msg =>
+        msg.id === tempMsgId
+          ? { ...msg, isStreaming: false }
+          : msg
+      ));
+      setStreamingMessageId(null);
 
       setScreenshot(null); // Clear screenshot after sending
     } catch (error) {
@@ -199,6 +231,42 @@ const ChatPDF = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const checkForUpdates = async () => {
+    try {
+      // Fetch local version
+      const localVersionRes = await fetch('/version.json');
+      const localVersion = await localVersionRes.json();
+
+      // Fetch GitHub latest release
+      const githubApi = `https://api.github.com/repos/${localVersion.githubOwner}/${localVersion.githubRepo}/releases/latest`;
+      const response = await fetch(githubApi);
+
+      if (!response.ok) return; // Silently fail if GitHub is unreachable
+
+      const latestRelease = await response.json();
+      const latestVersion = latestRelease.tag_name.replace('v', '');
+
+      // Compare versions (simple string comparison, can use semver library)
+      if (latestVersion !== localVersion.version) {
+        setUpdateAvailable({
+          version: latestVersion,
+          changelog: latestRelease.body || localVersion.changelog,
+          url: latestRelease.html_url
+        });
+      }
+    } catch (error) {
+      console.log('Update check failed:', error);
+      // Silently fail, don't bother user
+    }
+  };
+
+  const handleUpdate = () => {
+    const isWindows = navigator.platform.toLowerCase().includes('win');
+    const script = isWindows ? 'update.bat' : 'update.sh';
+    alert(`请运行项目根目录下的 ${script} 脚本进行升级\n\n升级完成后请重启应用。`);
+    window.open('https://github.com/juyou4/ChatPDF/releases/latest', '_blank');
+  };
+
   const captureFullPage = async () => {
     if (!pdfContainerRef.current) return;
     setIsLoading(true);
@@ -216,6 +284,42 @@ const ChatPDF = () => {
   // Render Components
   return (
     <div className={`h-screen w-full flex overflow-hidden transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-[#F6F8FA] to-[#E9F4FF] text-gray-800'}`}>
+
+      {/* Update Banner */}
+      <AnimatePresence>
+        {updateAvailable && (
+          <motion.div
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -100, opacity: 0 }}
+            className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 shadow-lg"
+          >
+            <div className="max-w-6xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🎉</span>
+                <div>
+                  <div className="font-semibold">新版本 v{updateAvailable.version} 可用！</div>
+                  <div className="text-sm opacity-90">{updateAvailable.changelog?.substring(0, 60)}...</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleUpdate}
+                  className="px-4 py-2 bg-white text-blue-600 rounded-lg font-medium hover:bg-blue-50 transition-colors"
+                >
+                  一键升级
+                </button>
+                <button
+                  onClick={() => setUpdateAvailable(null)}
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Sidebar (History) */}
       <AnimatePresence>
@@ -273,7 +377,7 @@ const ChatPDF = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full relative">
         {/* Header */}
-        <div className="h-16 flex items-center px-6 justify-between z-10">
+        <div className="h-16 flex items-center px-6 justify-between z-10" style={{ marginTop: updateAvailable ? '60px' : '0' }}>
           <button onClick={() => setShowSidebar(!showSidebar)} className="p-2 hover:bg-black/5 rounded-lg transition-colors">
             <Menu className="w-6 h-6" />
           </button>
