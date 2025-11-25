@@ -184,8 +184,9 @@ const ChatPDF = () => {
     }]);
 
     try {
+      // Temporarily disable SSE due to stability issues - use regular fetch
       // Use SSE streaming if enabled and no screenshot
-      if (streamSpeed !== 'off' && !screenshot) {
+      if (false && streamSpeed !== 'off' && !screenshot) {
         const response = await fetch(`${API_BASE_URL}/chat/stream`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
